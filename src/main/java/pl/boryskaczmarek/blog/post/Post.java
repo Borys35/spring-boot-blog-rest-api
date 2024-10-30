@@ -8,13 +8,13 @@ import org.springframework.data.annotation.Version;
 import java.time.LocalDateTime;
 
 public record Post(
-        @Id int id,
+        @Id Integer id,
         @NotEmpty String title,
-        @JsonProperty("author_id") int authorId,
+        @JsonProperty("author_id") Integer authorId,
         @NotEmpty String content,
         @JsonProperty("created_at") LocalDateTime createdAt,
         @JsonProperty("updated_at") LocalDateTime updatedAt,
-        @Version int version
+        @Version Integer version
 ) {
     public Post {
         if (createdAt.isAfter(updatedAt)) {
