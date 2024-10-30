@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +41,18 @@ public class PostController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    void updatePost(@PathVariable int id, @Valid @RequestBody Post post) {
+    void updatePost(@PathVariable int id, @RequestBody Post post) {
+        Post found = postRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
+        Post updated = new Post(
+                post.id(),
+                post.title() != null ? post.title() : found.title(),
+                post.authorId() != null ? post.authorId() : found.authorId(),
+                post.content() != null ? post.content() : found.content(),
+                found.createdAt(),
+                LocalDateTime.now(),
+                found.version()
+        );
+        postRepository.save(updated);
         postRepository.save(post);
     }
 
